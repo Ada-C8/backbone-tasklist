@@ -8,6 +8,8 @@ import './css/style.css';
 
 import Task from './models/task';
 import TaskList from './collections/task_list';
+import TaskView from './views/task_view';
+
 
 const taskList = new TaskList();
 let taskTemplate;
@@ -17,19 +19,26 @@ const renderList = function(taskList) {
   $taskList.empty();
 
   taskList.forEach((task) =>{
-    const taskHtml = $(taskTemplate(task.attributes));
-    $taskList.append(taskHtml);
 
-    taskHtml.find('.delete').click({task: task}, (params) => {
-      const task = params.data.task;
-      taskList.remove(task);
-      updateStatusMessageWith(`The task "${task.get('task_name')}" has been deleted`)
+    const taskView = new TaskView({
+      model: task,
+      template: _.template($('#task-template').html()),
+      tagName: 'li',
+      className: 'task',
     });
 
-    taskHtml.on('click', '.toggle-complete', {task: task}, function(params) {
-      params.data.task.set('is_complete', !params.data.task.get('is_complete'));
-      $(this).closest('.task').toggleClass('is-complete')
-    });
+    $taskList.append(taskView.render().$el);
+    // taskHtml.find('.delete').click({task: task}, (params) => {
+    //   const task = params.data.task;
+    //   console.log(params);
+    //   taskList.remove(task);
+    //   updateStatusMessageWith(`The task "${task.get('task_name')}" has been deleted`)
+    // });
+    //
+    // taskHtml.on('click', '.toggle-complete', {task: task}, function(params) {
+    //   params.data.task.set('is_complete', !params.data.task.get('is_complete'));
+    //   $(this).closest('.task').toggleClass('is-complete')
+    // });
   });
 }
 
