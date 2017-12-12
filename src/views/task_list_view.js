@@ -5,7 +5,7 @@ import Task from '../models/task';
 
 const TaskListView = Backbone.View.extend({
   initialize(params) {
-    this.template = params.template;
+    this.taskTemplate = params.taskTemplate;
     this.listenTo(this.model, 'update', this.render);
   },
   render() {
@@ -13,7 +13,7 @@ const TaskListView = Backbone.View.extend({
     this.model.each((task) => {
       const taskView = new TaskView({
         model: task,
-        template: this.template,
+        template: this.taskTemplate,
         tagName: 'li',
         className: 'task',
       });

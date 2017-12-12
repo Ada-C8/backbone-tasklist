@@ -16,7 +16,7 @@ const taskList = new TaskList();
 $(document).ready( () => {
   const taskListView = new TaskListView({
     model: taskList,
-    template: _.template($('#task-template').html()),
+    taskTemplate: _.template($('#task-template').html()),
     el: 'main'
   });
 
