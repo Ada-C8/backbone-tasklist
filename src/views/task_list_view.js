@@ -17,6 +17,7 @@ const TaskListView = Backbone.View.extend({
         tagName: 'li',
         className: 'task',
       });
+      this.listenTo(taskView, 'editMe', this.editTask);
       this.$('#todo-items').append(taskView.render().$el);
     });
     return this;
@@ -41,6 +42,12 @@ const TaskListView = Backbone.View.extend({
     } else {
       this.updateStatusMessageFrom(newTask.validationError);
     }
+  },
+  editTask: function(taskView) {
+    console.log("We're in the callback for listening to the custom event editMe");
+    this.$('#add-task-form [name=task_name]').val( taskView.model.get('task_name') );
+    this.$('#add-task-form [name=assignee]').val( taskView.model.get('assignee') );
+    this.model.remove(taskView.model);
   },
   updateStatusMessageFrom: function(messageHash) {
     const statusMessagesEl = this.$('#status-messages');
