@@ -4,6 +4,7 @@ import Task from '../models/task';
 const TaskView = Backbone.View.extend({
   initialize(params) {
     this.template = params.template;
+    this.bus = params.bus;
     this.listenTo(this.model, 'change', this.render);
   },
   render() {
@@ -28,6 +29,16 @@ const TaskView = Backbone.View.extend({
   events: {
     'click button.delete': 'deleteTask',
     'click button.toggle-complete': 'toggleComplete',
+    'click button.edit': 'editTask',
+    'click': 'selectTask',
+  },
+  selectTask(event) {
+    console.log('clicked');
+    this.bus.trigger('selected_task', this.model);
+  },
+  editTask(event) {
+    console.log('You did it! ');
+    this.trigger('edit_me', this.model);
   },
   toggleComplete(event) {
     // this.$el.toggleClass('is-complete');

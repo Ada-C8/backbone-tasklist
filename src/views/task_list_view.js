@@ -2,10 +2,12 @@ import Backbone from 'backbone';
 
 import TaskView from './task_view';
 import Task from '../models/task';
+import CurrentTaskView from './current_selected_view';
 
 const TaskListView = Backbone.View.extend({
   initialize(params) {
     this.template = params.template;
+    this.bus = params.bus;
 
     this.listenTo(this.model, 'update', this.render);
   },
@@ -62,18 +64,30 @@ const TaskListView = Backbone.View.extend({
   },
   render() {
     this.$('#todo-items').empty();
-
+    this.$('#selected-task').empty();
+    const currentTaskView = new CurrentTaskView({
+      bus: this.bus,
+      el: '#selected-task',
+    });
+    currentTaskView.render();
     this.model.each((task) => {
       const taskView = new TaskView({
         model: task,
         template: this.template,
         tagName: 'li',
         className: 'task',
+        bus: this.bus,
       });
       this.$('#todo-items').append(taskView.render().$el);
+      this.listenTo(taskView, 'edit_me', this.editTask);
     });
-
     return this;
+  },
+  editTask(task) {
+    // this.model.remove(task);
+    this.$('#add-task-form input[name=task_name]').val(task.get('task_name'));
+    this.$('#add-task-form input[name=assignee]').val(task.get('assignee'));
+    task.destroy();
   },
 
 

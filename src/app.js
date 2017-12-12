@@ -1,6 +1,7 @@
 // Vendor Modules
 import $ from 'jquery';
 import _ from 'underscore';
+import Backbone from 'backbone';
 
 // CSS
 import './css/foundation.css';
@@ -16,6 +17,12 @@ const taskList = new TaskList();
 let taskTemplate;
 
 $(document).ready( () => {
+  let bus = {};
+
+  bus = _.extend(bus, Backbone.Events);
+
+
+
   taskTemplate = _.template($('#task-template').html());
 
   taskList.add(new Task({task_name: "Put rendering logic in Backbone Views", assignee: "Me",
@@ -28,6 +35,7 @@ $(document).ready( () => {
     el: 'main',
     model: taskList,
     template: taskTemplate,
+    bus: bus,
   });
 
   taskListView.render();
